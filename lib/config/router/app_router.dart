@@ -1,9 +1,11 @@
 import 'package:go_router/go_router.dart';
-import 'package:teslo_app/presentation/authentication/screen/login_screen.dart';
+import 'package:teslo_app/src/authentication/presentation/presentation.dart';
+import 'package:teslo_app/src/shared/presentation/presentation.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/login',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const LoginScreen()),
+    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
   ],
 );
