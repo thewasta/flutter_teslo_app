@@ -50,6 +50,7 @@ class _LoginView extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text(ref.read(authenticationProvider).status.name),
                   Text("Login to your account", style: textStyle.titleSmall),
                   CustomTextFormField(
                     hintText: "Email",
