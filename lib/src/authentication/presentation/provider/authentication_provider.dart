@@ -4,7 +4,7 @@ import 'package:teslo_app/src/authentication/domain/model/user.dart';
 import 'package:teslo_app/src/authentication/infrastructure/provider/api/api_authentication_repository.dart';
 import 'package:teslo_app/src/shared/domain/inputs.dart';
 import 'package:teslo_app/src/shared/infrastructure/exception/infrastructure_exception.dart';
-import 'package:teslo_app/src/shared/infrastructure/provider/dio_http_client.dart';
+import 'package:teslo_app/src/shared/infrastructure/provider/http/dio_http_client.dart';
 import 'package:teslo_app/config/config.dart';
 
 final apiConfigProvider = Provider<ApiConfig>((ref) {

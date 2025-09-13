@@ -1,7 +1,7 @@
 import 'package:teslo_app/src/authentication/domain/model/user.dart';
 import 'package:teslo_app/src/authentication/domain/model/authentication_repository.dart';
 import 'package:teslo_app/src/shared/domain/inputs.dart';
-import 'package:teslo_app/src/shared/infrastructure/provider/dio_http_client.dart';
+import 'package:teslo_app/src/shared/infrastructure/provider/http/dio_http_client.dart';
 
 class ApiAuthenticationRepository implements AuthenticationRepository {
   final HttpClient _client;
