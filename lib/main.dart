@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
-      theme: TAppTheme.lightTheme,
+      theme: TAppTheme.darkTheme,
       darkTheme: TAppTheme.darkTheme,
       routerConfig: appRouter,
     );

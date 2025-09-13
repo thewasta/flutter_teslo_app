@@ -1,15 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_app/src/shared/domain/inputs/email.dart';
-import 'package:teslo_app/src/shared/domain/inputs/password.dart';
+import 'package:teslo_app/src/authentication/presentation/provider/authentication_provider.dart';
+import 'package:teslo_app/src/shared/domain/inputs.dart';
 
 final loginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
-      return LoginFormNotifier();
+      final loginCallback = ref.watch(authenticationProvider.notifier).login;
+      return LoginFormNotifier(loginCallback);
     });
 
 class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  LoginFormNotifier() : super(const LoginFormState());
+  final Function(Email, Password) _loginCallback;
+
+  LoginFormNotifier(this._loginCallback) : super(const LoginFormState());
 
   onEmailChanged(String value) {
     final email = Email.dirty(value);
@@ -30,6 +33,13 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
       password: password,
     );
     if (!state.isValid) return;
+    state = state.copyWith(isPosting: true);
+    try {
+      await _loginCallback(email, password);
+      state = state.copyWith(isPosting: false);
+    } catch (e) {
+      state = state.copyWith(isPosting: false, isValid: false);
+    }
   }
 
   bool isFormValid() {

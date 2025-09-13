@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:teslo_app/src/authentication/presentation/provider/authentication_provider.dart';
 import 'package:teslo_app/src/authentication/presentation/provider/login_form_provider.dart';
 import 'package:teslo_app/src/shared/presentation/presentation.dart';
 
@@ -22,6 +23,14 @@ class _LoginView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).textTheme;
     final form = ref.watch(loginFormProvider);
+
+    ref.listen(authenticationProvider, (previous, next) {
+      if (next.errorMessage.isEmpty) return;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(next.errorMessage)));
+    });
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -64,7 +73,8 @@ class _LoginView extends ConsumerWidget {
                     children: [
                       SizedBox(
                         child: FilledButton(
-                          onPressed: ref.read(loginFormProvider.notifier).onSubmit,
+                          onPressed:
+                              ref.read(loginFormProvider.notifier).onSubmit,
                           child: Text(
                             "Sign in",
                             style: textStyle.headlineSmall,
