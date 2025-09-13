@@ -6,6 +6,7 @@ import 'package:teslo_app/src/shared/domain/inputs.dart';
 import 'package:teslo_app/src/shared/infrastructure/exception/infrastructure_exception.dart';
 import 'package:teslo_app/src/shared/infrastructure/provider/http/dio_http_client.dart';
 import 'package:teslo_app/config/config.dart';
+import 'package:teslo_app/src/shared/infrastructure/provider/local_storage/shared_preferences_device_storage_repository.dart';
 
 final apiConfigProvider = Provider<ApiConfig>((ref) {
   return ApiConfig(baseUrl: Environment.apiUrl);
@@ -23,20 +24,35 @@ final apiAuthenticationRepositoryProvider = Provider<AuthenticationRepository>((
   return ApiAuthenticationRepository(client: client);
 });
 
+final sharedPreferencesRepositoryProvider =
+    Provider<SharedPreferencesDeviceStorageRepository>((ref) {
+      return SharedPreferencesDeviceStorageRepository();
+    });
+
 final authenticationProvider =
     StateNotifierProvider<AuthenticationNotifier, AuthenticationState>((ref) {
       final authRepo = ref.watch(apiAuthenticationRepositoryProvider);
-      return AuthenticationNotifier(authRepo);
+      final sharedRepo = ref.watch(sharedPreferencesRepositoryProvider);
+      return AuthenticationNotifier(authRepo, sharedRepo);
     });
 
 class AuthenticationNotifier extends StateNotifier<AuthenticationState> {
   final AuthenticationRepository _authRepo;
+  final SharedPreferencesDeviceStorageRepository
+  _sharedPreferencesDeviceStorageRepository;
 
-  AuthenticationNotifier(this._authRepo) : super(AuthenticationState());
+  AuthenticationNotifier(
+    this._authRepo,
+    this._sharedPreferencesDeviceStorageRepository,
+  ) : super(AuthenticationState());
 
   Future<void> login(Email email, Password password) async {
     try {
       final user = await _authRepo.login(email, password);
+      await _sharedPreferencesDeviceStorageRepository.setValue(
+        'token',
+        user.token,
+      );
       state = state.copyWith(user: user, status: AuthStatus.authenticated);
     } on InfrastructureException catch (e) {
       logout(e.message);
@@ -46,6 +62,7 @@ class AuthenticationNotifier extends StateNotifier<AuthenticationState> {
   }
 
   Future<void> logout([String? errorMessage]) async {
+    await _sharedPreferencesDeviceStorageRepository.removeKey('token');
     state = state.copyWith(
       user: null,
       status: AuthStatus.nonAuthenticated,
