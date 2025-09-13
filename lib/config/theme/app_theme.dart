@@ -8,30 +8,14 @@ class TAppTheme {
 
   static ThemeData lightTheme = _buildTheme(Brightness.light);
 
-  /*static ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Poppins',
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.white,
-    primaryColor: Colors.blue,
-    inputDecorationTheme: TAppTextFieldTheme.inputDecorationLightTheme,
-  );*/
   static ThemeData darkTheme = _buildTheme(Brightness.dark);
 
-  /*static ThemeData darkTheme = ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Poppins',
-    brightness: Brightness.dark,
-    primaryColor: Colors.blue,
-    scaffoldBackgroundColor: Colors.black,
-    textTheme: TAppTextTheme.textTheme,
-    inputDecorationTheme: TAppTextFieldTheme.inputDecorationDarkTheme,
-    textButtonTheme: TextButtonThemeData(style: ButtonStyle().copyWith()),
-  );*/
+  static const Color primaryColor = Color(0xFF363A69);
 
   static ThemeData _buildTheme(Brightness brightness) {
+    final isLight = brightness == Brightness.light;
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.blue,
+      seedColor: primaryColor,
       brightness: brightness,
     );
     return ThemeData(
@@ -39,29 +23,60 @@ class TAppTheme {
       fontFamily: 'Poppins',
       brightness: brightness,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor:
-          brightness == Brightness.light ? Colors.white : Colors.black,
+      scaffoldBackgroundColor: isLight ? Colors.white : Colors.black,
       textTheme: TAppTextTheme.buildTextTheme(brightness),
       inputDecorationTheme: TAppTextFieldTheme.buildDecorationTheme(brightness),
-      filledButtonTheme: FilledButtonThemeData(
-        style: TAppFilledButtonTheme.buildTheme(colorScheme),
-      ),
-      textButtonTheme: TextButtonThemeData(
+      elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            return Colors.white;
-          }),
-          overlayColor: WidgetStateProperty.all(
-            colorScheme.primary.withValues(alpha: 0.08),
-          ),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
           padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          ),
+          minimumSize: WidgetStateProperty.all(const Size(64, 48)),
+          textStyle: WidgetStateProperty.all(
+            const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+          ),
+          elevation: WidgetStateProperty.all(1),
+          backgroundColor: WidgetStateProperty.all(primaryColor),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          textStyle: const TextStyle(fontWeight: FontWeight.w600),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+      ),
+
+      // filledButtonTheme: FilledButtonThemeData(
+      //   style: TAppFilledButtonTheme.buildTheme(colorScheme),
+      // ),
+      // textButtonTheme: TextButtonThemeData(
+      //   style: ButtonStyle(
+      //     foregroundColor: WidgetStateProperty.resolveWith((states) {
+      //       return Colors.white;
+      //     }),
+      //     overlayColor: WidgetStateProperty.all(
+      //       colorScheme.primary.withValues(alpha: 0.08),
+      //     ),
+      //     shape: WidgetStateProperty.all(
+      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      //     ),
+      //     padding: WidgetStateProperty.all(
+      //       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
